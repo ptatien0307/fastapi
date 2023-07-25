@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Jinja2 Upload multiple images and show images - Cairocoders</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <form action="/upload-files/" enctype="multipart/form-data" method="post">
+        <label>Upload Files</label>
+        <input name="file" type="file">
+        <input type="submit">
+    </form>
+    {% if show %}
+        <div style="padding:20px;float:left;">
+            <img width="500" src="{{ url_for('images', path=show) }}">
+        </div>
+    {% endif %}
+</body>
+</html>
