@@ -6,17 +6,19 @@ from .. import models
 from ..database import engine, get_db
 from ..schemas.schemas import PostBase, PostCreate, PostUpdate, PostResponse
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/posts'
+)
 
 # GET POSTS
-@router.get("/posts", response_model=List[PostResponse])
+@router.get("/", response_model=List[PostResponse])
 def get_posts(db: Session = Depends(get_db)):
     post_query = db.query(models.Post)
     posts = post_query.all()
     return posts
 
 # CREATE A POST
-@router.post("/posts", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponse)
 def create_posts(post: PostCreate, db: Session = Depends(get_db)):
     # new_post = models.Post(**post.dict())
     new_post = models.Post(title=post.title, content=post.content, published=post.published)
@@ -28,7 +30,7 @@ def create_posts(post: PostCreate, db: Session = Depends(get_db)):
 
 
 # GET ONE PRODUCT
-@router.get("/posts/{id}", response_model=PostResponse)
+@router.get("/{id}", response_model=PostResponse)
 def get_product(id: int, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     post = post_query.first()
@@ -40,7 +42,7 @@ def get_product(id: int, db: Session = Depends(get_db)):
     return post
 
 # DELETE ONE PRODUCT
-@router.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_one_product(id: int, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     deleted_post = post_query.first()
@@ -55,7 +57,7 @@ def delete_one_product(id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 # UPDATE A PRODUCT
-@router.put("/posts/{id}", response_model=PostResponse)
+@router.put("/{id}", response_model=PostResponse)
 def update_one_product(id: int, post: PostUpdate, db: Session = Depends(get_db)):
     post_query = db.query(models.Post).filter(models.Post.id == id)
     updated_post = post_query.first()
